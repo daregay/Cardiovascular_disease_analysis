@@ -167,7 +167,7 @@ The 5 most important features for Gradient Boosting are age, systolic blood pres
 The two models identified the same 4 important top features. 
 
 
-**Roc curve** 
+### **Roc curve** 
 
 ROC curve shows the trade-off between the true positive rate and the false positive rate for each level of threshold. The bigger the total area under the ROC curve, the better the model preformance. The plot below shows the ROC curve for random forest and gradient boosting. 
 
@@ -175,9 +175,12 @@ ROC curve shows the trade-off between the true positive rate and the false posit
 
 Random forest has the biggest area under the curve and shows that it preforms best. 
 
+
+
+### 
 ###conclusion 
 
-The goal of this study was to find the best model 
+The goal of this study was to find the best model. I compared Random Forest Classifier and Gradient Boosting Classifier using Random Search CV to find the best parameters. Using recall as the primary metric, Random Forest gaves the best result. 
 
 ### further work 
 
