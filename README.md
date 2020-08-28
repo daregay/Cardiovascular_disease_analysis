@@ -180,7 +180,7 @@ ROC curve shows the trade-off between the true positive rate and the false posit
 The partial dependence plots show how each predictor affects the model's predictions. You can see how the chance of CVD increase as age increases. After systolic blood pressure of 125 mmHg the chance of CVD increases exponentially. The effects of diastolic pressure on the model is pretty slim and seems to hold steady after about 90 mmHg. BMI also has a very small effect. 
 
 ### 
-###conclusion 
+### conclusion 
 
 The goal of this study was to find the best model. I compared Random Forest Classifier and Gradient Boosting Classifier using Random Search CV to find the best parameters. Using recall as the primary metric, Random Forest gaves the best result to predict CVD. 
 
