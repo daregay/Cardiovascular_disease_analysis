@@ -1,4 +1,6 @@
 # Predicting Cardiovascular Disease (CVD)
+
+![cvd](images/cvd.png)
  
 ## Introduction
 Cardiovascular diseases (CVDs) can refer to a number of heart conditions that include diseased vessels, structural problems and blood clots.
@@ -52,18 +54,18 @@ This is what the original dataset looked like. The top 5 rows.
 **The following actions are taken to transform the data**
  
 The dataset didn't have any nan values. However, the features of the blood pressure measurements had some pretty high outliers.
- 
+
 Systolic blood pressure: The top number in blood pressure reading refers to the amount of pressure in your heart when it beats, squeezes and pushes blood through your arteries to the rest of your body.
  
 Diastolic pressure:  The bottom number in a blood pressure reading refers to the amount of pressure in your arteries when your heart is at rest between beats.
  
 Blood pressure is measured in millimeters of mercury (mm Hg).
+
+![bpressure](images/bpressure.png)
+
+As seen from the picture above, blood pressure above 180/120 (mmHg) is considered hyperternsive crisis. I had some rows that had blood pressure recorded of bigger than 1000. 
  
-[blood pressure](https://www.heart.org/-/media/files/health-topics/high-blood-pressure/hbp-rainbow-chart-english-pdf-ucm_499220.pdf)
- 
- 
- 
-According to an article published at the National Library of Medicine - National Center for Biotechnology Information,  the highest blood pressure recorded in an individual was 370/360 (mmHG). I used those numbers to set the limit on my dataset for those variables.
+According to an article published at the National Library of Medicine - National Center for Biotechnology Information,  the highest blood pressure recorded in an individual was 370/360 (mmHG). I used those numbers to set the limit on my dataset for those variables, and delet the outliers. 
  
 The data had 40 rows that had systolic blood pressure greater than 370, and 953 rows that had diastolic blood pressure greater than 360. I decided to drop those rows - a total of 993.
  
@@ -71,7 +73,7 @@ The data had 40 rows that had systolic blood pressure greater than 370, and 953 
  
 This section uses data exploratory analysis to investigate features that might be good predictors of whether a person has cvd or not.
  
-First it will explore the objective features, such as age, BMI and gender.
+First it will explore the objective features, such as age, and BMI.
  
 **Age**
  
@@ -136,12 +138,12 @@ The chosen hyper-parameters using 100 desired iterations are listed in the below
 
 | RandomForestClassifier | GradientBoostingClassifier |
 | ------------- | ------------- |  
-| n_estimators=90 |
-|min_samples_split=3|
-| min_samples_leaf= 3 |
-| max_features= auto |
-| max_depth= None|
-| criterion = gini|
+| n_estimators=90 | n_estimators=100 |
+|min_samples_split=3|min_samples_split=30|
+| min_samples_leaf= 3 |min_samples_leaf= 1 |
+| max_features= auto |max_features= sqrt |
+| max_depth= None| max_depth= None|
+| criterion = gini| learning_rate = .02|
 
 
 The resulting model metrics are 
@@ -156,7 +158,7 @@ For this study, recall is the metric that we care most about. We want to penaliz
 
 **Next we will look at Feature Importance**
 
-![rffeatureimportance](images/random_forest_feature_ranking.png)
+![rffeatureimportance](images/2random_forest_feature_ranking.png)
 The 5 most important features for Random Forest are age, systolic blood pressure, diastolic blood pressure, BMI, and well above normal cholestrol level. About 36.6% of information gain is done by age, followed by systolic blood pressure information gain of 31.2%,  13% by diastolic blood pressure, and less than 1% for the rest of the features. 
 
 ![gbfeatureimportance](images/Gradient_Boosting_feature_ranking.png)
@@ -167,7 +169,7 @@ The two models identified the same 4 important top features.
 
 **Roc curve** 
 
-ROC curve shows the trade-off between the true positive rate and the false positive rate for each level of threshold. The bigger the total area under the ROC curve, the better the model preformance. The plot below shos the ROC curve for random forest and gradient boosting. 
+ROC curve shows the trade-off between the true positive rate and the false positive rate for each level of threshold. The bigger the total area under the ROC curve, the better the model preformance. The plot below shows the ROC curve for random forest and gradient boosting. 
 
 ![roc_curve](images/roc.png)
 
@@ -211,3 +213,5 @@ partial dependency plot of random forest.
 maximal%20lifting%20with%20slow%20exhalation.
 
 * https://www.webmd.com/heart-disease/ldl-cholesterol-the-bad-cholesterol#1
+
+*https://www.webmd.com/heart-disease/ss/slideshow-heart-disease-surprising-causes
