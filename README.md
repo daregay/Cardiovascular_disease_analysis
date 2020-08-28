@@ -177,10 +177,12 @@ Random forest has the biggest area under the curve and shows that it preforms be
 
 ###conclusion 
 
+The goal of this study was to find the best model 
+
 ### further work 
 
-Use the top 4 variables to run the models again. 
-partial dependency plot of random forest. 
+* Use the top 4 variables to run the models again. 
+* partial dependency plot of random forest. 
 
 
 
