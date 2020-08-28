@@ -51,7 +51,7 @@ This is what the original dataset looked like. The top 5 rows.
 ![original](images/original_df_head5.png)
  
  
-**The following actions are taken to transform the data**
+### **The following actions are taken to transform the data**
  
 The dataset didn't have any nan values. However, the features of the blood pressure measurements had some pretty high outliers.
 
@@ -169,23 +169,26 @@ The two models identified the same 4 important top features.
 
 ### **Roc curve** 
 
-ROC curve shows the trade-off between the true positive rate and the false positive rate for each level of threshold. The bigger the total area under the ROC curve, the better the model preformance. The plot below shows the ROC curve for random forest and gradient boosting. 
-
 ![roc_curve](images/roc.png)
 
-Random forest has the biggest area under the curve and shows that it preforms best. 
+ROC curve shows the trade-off between the true positive rate and the false positive rate for each level of threshold. The bigger the total area under the ROC curve, the better the model preformance. The plot above shows the ROC curve for random forest and gradient boosting. Random forest has the biggest area under the curve and shows that it preforms best. 
 
+###  **Gradient Boosting Partial Dependency**
 
+![gradientboosting](images/db.png)
+
+The partial dependence plots show how each predictor affects the model's predictions. You can see how the chance of CVD increase as age increases. After systolic blood pressure of 125 mmHg the chance of CVD increases exponentially. The effects of diastolic pressure on the model is pretty slim and seems to hold steady after about 90 mmHg. BMI also has a very small effect. 
 
 ### 
 ###conclusion 
 
-The goal of this study was to find the best model. I compared Random Forest Classifier and Gradient Boosting Classifier using Random Search CV to find the best parameters. Using recall as the primary metric, Random Forest gaves the best result. 
+The goal of this study was to find the best model. I compared Random Forest Classifier and Gradient Boosting Classifier using Random Search CV to find the best parameters. Using recall as the primary metric, Random Forest gaves the best result to predict CVD. 
 
 ### further work 
 
 * Use the top 4 variables to run the models again. 
-* partial dependency plot of random forest. 
+* create partial dependency plot for random forest. 
+* compute area under roc curve 
 
 
 
