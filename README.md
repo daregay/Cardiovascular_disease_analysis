@@ -150,9 +150,9 @@ The resulting model metrics are
 
 | metrics | RandomForestClassifier | GradientBoostingClassifier |
 | ------------- | ------------- | ------------- | 
-| Accuracy | 0.758 | 0.743 |
-| Precision | 0.764 | 0.736 |
-| Recall | 0.713 | 0.704 |
+| Accuracy | 0.711 | 0.704 |
+| Precision | 0.716 | 0.704 |
+| Recall | 0.701 | 0.703 |
 
 For this study, recall is the metric that we care most about. We want to penalize false negatives. That is we don't want to minimize the model predicting negative when the person has CVD. Out of the two models Random Forest gives a better recall score. 
 
@@ -169,7 +169,7 @@ The two models identified the same 4 important top features.
 
 ### **Roc curve** 
 
-![roc_curve](images/roc.png)
+![roc_curve](images/roc_auc.png)
 
 ROC curve shows the trade-off between the true positive rate and the false positive rate for each level of threshold. The bigger the total area under the ROC curve, the better the model preformance. The plot above shows the ROC curve for random forest and gradient boosting. Random forest has the biggest area under the curve and shows that it preforms best. 
 
