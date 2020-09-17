@@ -71,7 +71,7 @@ The data had 40 rows that had systolic blood pressure greater than 370, and 953 
  
 ## EDA and Feature Engineering
  
-This section uses data exploratory analysis to investigate features that might be good predictors of whether a person has cvd or not.
+This section uses data exploratory analysis to investigate features that might be good predictors if whether a person has cvd or not.
  
 First it will explore the objective features, such as age, and BMI.
  
@@ -212,6 +212,8 @@ The partial dependence plots show how each predictor affects the model's predict
 ### conclusion 
 
 The goal of this study was to find the best model. I compared several models using Random Search CV to find the best parameters. For this dataset, using recall as the primary metric and with optimized threshold, Random Forest gaves the best result to predict CVD. Random Forest also gave the largest area under a ROC curve. 
+
+In par with the explatory data analysis that was done initially, gender, smoking, alcohol, and excercise gave a very low signal for our model to train on. More than 99% of the information was gained by the other features. 
 
 ### further work 
 
