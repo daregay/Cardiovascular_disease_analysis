@@ -118,14 +118,6 @@ Again, the vast majority of people in the dataset reported that they do not drin
  
 The majority of people reported that they exercise. Among the people who reported that they are active the presence of CVD is slightly lower by a very small amount. The number of people who have CVD is slightly higher among people who are not active.
  
-With the initial data EDA, I made the choice to select the following variables that show strong relationship to CVD to create my models:
- 
-- Age
-- BMI
-- Cholesterol level
-- Glucose level
-- Systolic blood pressure
-- Diastolic blood pressure
 
 ### **Data Transformation steps** 
  
@@ -149,12 +141,12 @@ For this study, recall is the metric that we care most about. We want to penaliz
 
 The second important metric is precision. While we don't want our model to predict negative for a person who has CVD. We also want to minimize our model predicting positive for a person who doesn't have CVD.  A high number of false positive can be costly for hospitals, and the patients because of all the false medial examinations. 
 
-**The resulting model metrics are **
+#### The resulting model metrics are:
 
 | metrics|RandomForestClassifier | GradientBoostingClassifier | LogisticRegression| KNeighborsClassifier| 
 | ------------- | ------------- | ------------- |  ------------- |  ------------- |
 | Accuracy | 0.742 | 0.720 | 0.733  | 0.721 |
-| Precision | 0.765 | 0.725 | 0.761 | 0.731 |
+| Precision | 0.775 | 0.735 | 0.771 | 0.741 |
 | Recall | 0.704 | 0.703 | 0.685 | 0.651 |
 | f1 score | 0.740 | 0. 710 | 0.725 | 0.700|
 
@@ -171,19 +163,20 @@ While KneighborsClassifier gives accuracy and precision score that is on par wit
 
 ROC curve shows the trade-off between the true positive rate and the false positive rate for each level of threshold. The bigger the total area under the ROC curve, the better the model preformance. The plot above shows the ROC curve for 3 of my competing models. Random forest has the biggest area under the curve and shows that it preforms best, while Logistic Regression is a very close second and has almost similar score. 
 
-![recallprecision](images/precision_recall.png)
+![recallprecision](images/precision_recal.png)
 To properly choose the optimal treshold for each model, a precision and recall curve was also computed to see the tradoff score for the two metrics. 
 
-The scores were computed again with a different treshhold for the three classifiers.  
+The scores were computed again with a different treshhold for the three classifiers. Because the treshold is scaled in favor of recall, the scores for precision went down a few points for the models.   
 
-| metrics|RandomForestClassifier | GradientBoostingClassifier | LogisticRegression| 
-| ------------- | ------------- | ------------- |  ------------- |  ------------- |
-| Accuracy | 0.710 | 0.690 | 0.711  | 
-| Precision | 0.710 | 0.680 | 0.701| 
-| Recall | 0.823 | 0.77 | 0.800| 
-| f1_score| 0.736| .710| .731| 
 
-Again RandomForest gives the highest Recall score, while Logistic Regression is a close competitor.
+| metrics| RandomForestClassifier | GradientBoostingClassifier | LogisticRegression | 
+| ------------- | ------------- | ------------- |  ------------- |
+| Accuracy | 0.710 | 0.690 | 0.711 | 
+| Precision | 0.710 | 0.680 | 0.701 | 
+| Recall | 0.823 | 0.77 | 0.800 | 
+| f1_score | 0.736 | .710 | .731 | 
+
+Again RandomForest gives the highest score, while Logistic Regression is a close competitor. Given that it has the highest recall score and the largest area under the curve, Random Forest is chosen as the winning model. 
 
 ## Analysis of the Choosen model 
 ![rffeatureimportance](images/rf_confusion.png)
@@ -207,8 +200,6 @@ The 5 most important features for Random Forest are age, systolic blood pressure
 The partial dependence plots show how each predictor affects the model's predictions. You can see how the chance of CVD increase as age increases. After systolic blood pressure of 125 mmHg the chance of CVD increases exponentially. The effects of diastolic pressure on the model is pretty slim and seems to hold steady after about 90 mmHg. BMI also has a very small effect. 
 
 
-
-
 ### conclusion 
 
 The goal of this study was to find the best model. I compared several models using Random Search CV to find the best parameters. For this dataset, using recall as the primary metric and with optimized threshold, Random Forest gaves the best result to predict CVD. Random Forest also gave the largest area under a ROC curve. 
@@ -218,7 +209,7 @@ In par with the explatory data analysis that was done initially, gender, smoking
 ### further work 
 
 * Use the top fewer variables to run the models again and see if we can compute better results. 
-* Perform PCA to see the the most important features
+* Perform PCA to see the the most important features 
 
 
 ### Sources
@@ -230,3 +221,12 @@ maximal%20lifting%20with%20slow%20exhalation.
 * https://www.webmd.com/heart-disease/ldl-cholesterol-the-bad-cholesterol#1
 
 *https://www.webmd.com/heart-disease/ss/slideshow-heart-disease-surprising-causes
+
+With the initial data EDA, I made the choice to select the following variables that show strong relationship to CVD to create my models:
+ 
+- Age
+- BMI
+- Cholesterol level
+- Glucose level
+- Systolic blood pressure
+- Diastolic blood pressure
