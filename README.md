@@ -157,10 +157,12 @@ The second important metric is precision. While we don't want our model to predi
 | Precision | 0.765 | 0.725 | 0.761 | 0.731 |
 | Recall | 0.704 | 0.703 | 0.685 | 0.651 |
 | f1 score | 0.740 | 0. 710 | 0.725 | 0.700|
--While the four models seem on par with each other for the most part. Random Forest gives the best score on all the 3 metrics. 
--Gradient Boosting gives the second highest recall score, however it has the lowest score for precision. 
--Logistic Regression gives a recall score lower than RandomForest and Gradient Boosting but it's precision score is higher than GradientBoosting. 
--While KneighborsClassifier gives accuracy and precision score that is on par with the other, it has the lowest recall score. So I will drop it and focus on optimizing the other 3 models. 
+
+
+While the four models seem on par with each other for the most part. Random Forest gives the best score on all the metrics. 
+Gradient Boosting gives the second highest recall score, however it has the lowest score for precision. 
+Logistic Regression gives a recall score lower than RandomForest and Gradient Boosting but it's precision score is higher than GradientBoosting. 
+While KneighborsClassifier gives accuracy and precision score that is on par with the other, it has the lowest recall score. So I will drop it and focus on optimizing the other 3 models. 
 
 
 **Given the results above, ROC curve was plotted to find an optimal treshhold for the models.** 
@@ -173,6 +175,7 @@ ROC curve shows the trade-off between the true positive rate and the false posit
 To properly choose the optimal treshold for each model, a precision and recall curve was also computed to see the tradoff score for the two metrics. 
 
 The scores were computed again with a different treshhold for the three classifiers.  
+
 | metrics|RandomForestClassifier | GradientBoostingClassifier | LogisticRegression| 
 | ------------- | ------------- | ------------- |  ------------- |  ------------- |
 | Accuracy | 0.710 | 0.690 | 0.711  | 
@@ -182,67 +185,38 @@ The scores were computed again with a different treshhold for the three classifi
 
 Again RandomForest gives the highest Recall score, while Logistic Regression is a close competitor.
 
-**Feature Importance** -->
+## Analysis of the Choosen model 
+![rffeatureimportance](images/rf_confusion.png)
+
+14,000 rows were used for testing my model.  The model correctly predicted 37.33% (6411 people) as not having a CVD, and 34.47% (5920 people) as having a CVD.  13.13% (2255 people) were incorrectly predicted as having a CVD, and 15.08% (2590 people) were incorrectly predicted as not having CVD. 
+
+
+**Feature Importance**
 
 ![rffeatureimportance](images/2random_forest_feature_ranking.png)
-The 5 most important features for Random Forest are age, systolic blood pressure, diastolic blood pressure, BMI, and well above normal cholestrol level. About 36.6% of information gain is done by age, followed by systolic blood pressure information gain of 31.2%,  13% by diastolic blood pressure, and less than 1% for the rest of the features. 
 
-![gbfeatureimportance](images/Gradient_Boosting_feature_ranking.png)
-The 5 most important features for Gradient Boosting are age, systolic blood pressure, diastolic blood pressure, BMI, and normal cholestrol level. About 60% of information gain is done by age, followed by 17 % for systolic blood pressure and less than 1% percent for diastolic and the rest of the features. 
+The 5 most important features for Random Forest are age, systolic blood pressure, diastolic blood pressure, BMI, and well above normal cholestrol level. About 36.6% of information gain is done by age, followed by systolic blood pressure information gain of 31.2%,  13% by diastolic blood pressure, 11% for BMI, and about 1% for the rest of the listed features. 
 
-The two models identified the same 4 important top features. 
+- The top 10 features contain 99% of the information gain that was done by the model. 
 
 
-###  **Gradient Boosting Partial Dependency**
+### Random Forest Partial Dependency
 
 ![gradientboosting](images/db.png)
 
 The partial dependence plots show how each predictor affects the model's predictions. You can see how the chance of CVD increase as age increases. After systolic blood pressure of 125 mmHg the chance of CVD increases exponentially. The effects of diastolic pressure on the model is pretty slim and seems to hold steady after about 90 mmHg. BMI also has a very small effect. 
-
-### ** Random Forest Partial Dependency** 
-![randomforest](images/rf.png,width="200")
 
 
 
 
 ### conclusion 
 
-The goal of this study was to find the best model. I compared Random Forest Classifier and Gradient Boosting Classifier using Random Search CV to find the best parameters. Using recall as the primary metric, Random Forest gaves the best result to predict CVD. 
-
-We trained KNN, RandomForest and Logistic Regression with different penality and reveived almost similar results.
-Here We dealing with a problem of a disease impacting a human health. So, We can't put someone's health in danger with our reckless decision
-We need to have an accurate model.
-In such cases, it's not a big threat if our model predict a Non CVD case as CVD (False Positive) because medical staff can later examine him/her.
-But We can't risk of predicting a CVD case as Non CVD (False Negative) because in that case we'll be jeopardizing with that person's life.
+The goal of this study was to find the best model. I compared several models using Random Search CV to find the best parameters. For this dataset, using recall as the primary metric and with optimized threshold, Random Forest gaves the best result to predict CVD. Random Forest also gave the largest area under a ROC curve. 
 
 ### further work 
 
-* Use the top 4 variables to run the models again. 
-* create partial dependency plot for random forest. 
-* compute area under roc curve 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+* Use the top fewer variables to run the models again and see if we can compute better results. 
+* Perform PCA to see the the most important features
 
 
 ### Sources
