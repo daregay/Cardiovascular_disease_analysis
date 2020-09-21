@@ -63,9 +63,9 @@ Blood pressure is measured in millimeters of mercury (mm Hg).
 
 ![bpressure](images/bpressure.png)
 
-As seen from the picture above, blood pressure above 180/120 (mmHg) is considered hyperternsive crisis. I had some rows that had blood pressure recorded of bigger than 1000. 
+As seen from the picture above, blood pressure above 180/120 (mmHg) is considered hyperternsive crisis. I had some rows that had blood pressure recorded higher than 1000. 
  
-According to an article published at the National Library of Medicine - National Center for Biotechnology Information,  the highest blood pressure recorded in an individual was 370/360 (mmHG). I used those numbers to set the limit on my dataset for those variables, and delet the outliers. 
+According to an article published at the National Library of Medicine - National Center for Biotechnology Information,  the highest blood pressure recorded in an individual was 370/360 (mmHG). I used those numbers to set the limit on my dataset for those variables, and deleted the outliers. 
  
 The data had 40 rows that had systolic blood pressure greater than 370, and 953 rows that had diastolic blood pressure greater than 360. I decided to drop those rows - a total of 993. Leaving me with about 69,000 rows to work with. 
  
@@ -86,7 +86,7 @@ Age can be a possible predictor for the presence of CVD. As seen from the bar pl
  
 ![bmi](images/count_bmi.png)
  
-The body mass index is taken by dividing the weight by the height. The barplot shows there are more people who don't have CVD than people who have BMI of less than 27. The trend generally shows that, for those people who have a BMI of 27 or larger, there are more people who have CVD than those who don't. While the opposite is true for when BMI is less than 27. 
+The body mass index is taken by dividing the weight by the height. The barplot shows that most people who have BMI of less than 27 do not have CVD. The trend generally shows that, for those people who have a BMI of 27 or larger, there are more people who have CVD than those who don't. While the opposite is true for when BMI is less than 27. 
  
 **Gender**
 ![gender](images/gender.png)
@@ -118,18 +118,21 @@ Again, the vast majority of people in the dataset reported that they do not drin
  
 The majority of people reported that they exercise. Among the people who reported that they are active the presence of CVD is slightly lower by a very small amount. The number of people who have CVD is slightly higher among people who are not active.
  
+## The Process
+
+below is the process taken to compute my results. 
 
 ### **Data Transformation steps** 
  
 - For Glucose level and Cholesterol level, additional feature engineering is performed to encode the categorical values. 
 - The values of 1 and 2 for the Gender column in reference to women and men, respectivily, was also changed to 0 and 1 so that it doesn't create weight problem during modeling. 
 - There is no balancing issue, since the target variable of the dataset is very balanced, with people having CVD making up 48% of the data. 
-- The columns for height and weight were dropped since a BMI column was created using them. The column for patients ID was also dropped. 
+- The columns for height and weight were dropped since feature engineering of a BMI column was done using them. The column for patients ID was also dropped. 
  
  
 ### Sampling, Modeling & Comparison
 
-I compared 4 different models: Random Forest Classifier, Gradient Boosting Classifier, Logistic Regression and K-neighers neighbors (KNN). For the first three models, RandomizedSearchCV was used to find the best hyper-parameters. Additionally, for logistic regression the dataset was scaled to have a mean of 0 and standard deviation of 1. 
+I compared 4 different models: Random Forest Classifier, Gradient Boosting Classifier, Logistic Regression and K-neighers neighbors (KNN). First the data was scaled to have mean of 0 and standard deviationof 1. For the first three models, RandomizedSearchCV was used to find the best hyper-parameters. 
 
 For KNN an elbow plot was preformed to see the most optimized number of k neighbors. 
 
@@ -137,48 +140,44 @@ For KNN an elbow plot was preformed to see the most optimized number of k neighb
 
 Based on the plot a k value of 27, which has the least error rate, was chosen for the number of neighbors. 
 
-For this study, recall is the metric that we care most about. We want to penalize false negatives. That is we want to minimize the model predicting negative when the person has CVD.We are dealing with a problem of a disease impacting a human health, so we want to lower the risk of predicting a CVD case as Non CVD (False Negative) because it will be jeopardizing a person's life. 
+For this study, recall is the metric that we care most about. We want to penalize false negatives. That is we want to minimize the model predicting negative when the person has CVD. We are dealing with a problem of a disease impacting a human health, so we want to lower the risk of predicting a CVD case as Non CVD (False Negative) because it will be jeopardizing a person's life. 
 
 The second important metric is precision. While we don't want our model to predict negative for a person who has CVD. We also want to minimize our model predicting positive for a person who doesn't have CVD.  A high number of false positive can be costly for hospitals, and the patients because of all the false medial examinations. 
-
-#### The resulting model metrics are:
-
-| metrics|RandomForestClassifier | GradientBoostingClassifier | LogisticRegression| KNeighborsClassifier| 
-| ------------- | ------------- | ------------- |  ------------- |  ------------- |
-| Accuracy | 0.742 | 0.720 | 0.733  | 0.721 |
-| Precision | 0.775 | 0.735 | 0.771 | 0.741 |
-| Recall | 0.704 | 0.703 | 0.685 | 0.651 |
-| f1 score | 0.740 | 0. 710 | 0.725 | 0.700|
-
-
-While the four models seem on par with each other for the most part. Random Forest gives the best score on all the metrics. 
-Gradient Boosting gives the second highest recall score, however it has the lowest score for precision. 
-Logistic Regression gives a recall score lower than RandomForest and Gradient Boosting but it's precision score is higher than GradientBoosting. 
-While KneighborsClassifier gives accuracy and precision score that is on par with the other, it has the lowest recall score. So I will drop it and focus on optimizing the other 3 models. 
-
-
-**Given the results above, ROC curve was plotted to find an optimal treshhold for the models.** 
-
-![roc curve](images/roc_auc.png)
-
-ROC curve shows the trade-off between the true positive rate and the false positive rate for each level of threshold. The bigger the total area under the ROC curve, the better the model preformance. The plot above shows the ROC curve for 3 of my competing models. Random forest has the biggest area under the curve and shows that it preforms best, while Logistic Regression is a very close second and has almost similar score. 
 
 ![recallprecision](images/precision_recal.png)
 To properly choose the optimal treshold for each model, a precision and recall curve was also computed to see the tradoff score for the two metrics. 
 
-The scores were computed again with a different treshhold for the three classifiers. Because the treshold is scaled in favor of recall, the scores for precision went down a few points for the models.   
+Based on the plot a treshhold of .3 was chosen. 
+
+## The resulting model metrics are:
+
+| metrics|RandomForestClassifier | GradientBoostingClassifier | LogisticRegression| KNeighborsClassifier| 
+| ------------- | ------------- | ------------- |  ------------- |  ------------- |
+| Accuracy | 0.710 | 0.690 | 0.711 | .706
+| Precision | 0.710 | 0.680 | 0.701 | .701
+| Recall | 0.831 | 0.79 | 0.823 | .800
 
 
-| metrics| RandomForestClassifier | GradientBoostingClassifier | LogisticRegression | 
-| ------------- | ------------- | ------------- |  ------------- |
-| Accuracy | 0.710 | 0.690 | 0.711 | 
-| Precision | 0.710 | 0.680 | 0.701 | 
-| Recall | 0.823 | 0.77 | 0.800 | 
-| f1_score | 0.736 | .710 | .731 | 
+Random Forest gives the best score on all the metrics.However, the four models seem on par with each other for the most part. Because they all have similar scores I will try stacking them together to see if I can get a higher score. 
 
-Again RandomForest gives the highest score, while Logistic Regression is a close competitor. Given that it has the highest recall score and the largest area under the curve, Random Forest is chosen as the winning model. 
+Model stacking is an efficient ensemble method in which the predictions, generated by using various machine learning algorithms, are used as inputs in a second-layer learning algorithm. This second-layer algorithm is trained to optimally combine the model predictions to form a new set of predictions.
 
-## Analysis of the Choosen model 
+In this case since RandomForest gave the highest result, I will take the predicted weighted average of the first three models- LogisticRegression, GradientBoosting, and KNN , and use that as input for Random Forest. 
+
+![recallprecision](images/precision_recal.png)
+
+The stacked model gave a higher score. The 4 models recall score is depicted in the plot below. 
+
+**Given the results above, ROC curve was plotted to compare the area under the curve** 
+
+![roc curve](images/roc_auc.png)
+
+ROC curve shows the trade-off between the true positive rate and the false positive rate for each level of threshold. The bigger the total area under the ROC curve, the better the model preformance. The plot above shows the ROC curve for all the competing models. The goal is to see if the stacked model is better than the 4 models individually. The stacked model has the biggest area under the curve and shows that it preforms best, while RandomForest is a close second. 
+
+
+
+
+## Analysis of the Models 
 ![rffeatureimportance](images/rf_confusion.png)
 
 14,000 rows were used for testing my model.  The model correctly predicted 37.33% (6411 people) as not having a CVD, and 34.47% (5920 people) as having a CVD.  13.13% (2255 people) were incorrectly predicted as having a CVD, and 15.08% (2590 people) were incorrectly predicted as not having CVD. 
@@ -192,6 +191,10 @@ The 5 most important features for Random Forest are age, systolic blood pressure
 
 - The top 10 features contain 99% of the information gain that was done by the model. 
 
+## Decision Boundries: 
+
+![decisonboundry](images/)
+
 
 ### Random Forest Partial Dependency
 
@@ -202,14 +205,15 @@ The partial dependence plots show how each predictor affects the model's predict
 
 ### conclusion 
 
-The goal of this study was to find the best model. I compared several models using Random Search CV to find the best parameters. For this dataset, using recall as the primary metric and with optimized threshold, Random Forest gaves the best result to predict CVD. Random Forest also gave the largest area under a ROC curve. 
+The goal of this study was to find the best model. I compared several models using Random Search CV to find the best parameters. For this dataset, using recall as the primary metric and with optimized threshold, Stacked Classifier gave a better result.  The stacked model also gave the largest area under a ROC curve. 
 
-In par with the explatory data analysis that was done initially, gender, smoking, alcohol, and excercise gave a very low signal for our model to train on. More than 99% of the information was gained by the other features. 
 
 ### further work 
+In par with the explatory data analysis that was done initially, gender, smoking, alcohol, and excercise gave a very low signal for our model to train on. More than 99% of the information was gained by the other features. So further work I would like to: 
 
 * Use the top fewer variables to run the models again and see if we can compute better results. 
-* Perform PCA to see the the most important features 
+* Perform PCA to see if we get better results
+* Try deep learning neural networks. 
 
 
 ### Sources
