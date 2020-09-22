@@ -28,12 +28,15 @@ def split_train_holdout(df, target, test_size=0.2, random_state=33):
     '''
     y= df[target].values
     del df[target]
-    x= df.values
-    X_train, X_holdout, y_train, y_holdout = train_test_split(x, y, 
+    X= df.values
+    scaler= StandardScaler()
+    scaled_x= scaler.fit_transform(X)
+    X_train, X_holdout, y_train, y_holdout = train_test_split(scaled_x, y, 
                                                           shuffle=True,
                                                           test_size=test_size, 
                                                           random_state=random_state)
     return X_train, X_holdout, y_train, y_holdout 
+
 
 def gradient_boosting(X_train, y_train):
     '''finds the best parameters for Gradient Boosting classifier using randomed search cv'''
@@ -54,20 +57,19 @@ def gradient_boosting(X_train, y_train):
               'min_samples_leaf': min_samples_leaf,
               'criterion': criterion}
     # hyperparameter tuning parameter search methodology
-    desired_iterations = 100
     g_random_search = RandomizedSearchCV(gclassifier, 
                                    param_grid, 
                                    scoring='recall',
                                    cv=3,
-                                   n_iter=desired_iterations,
+                                   n_iter=200,
                                    verbose=1,
                                    return_train_score=True,
                                    n_jobs=-1)
     g_random_search.fit(X_train, y_train)
     # print the bestparameters and the best recall score
-    gradientboosting_randomsearch_bestparams = g_random_search.best_params_
-    gradientboosting_randomsearch_bestscore =  g_random_search.best_score_
-    return gradientboosting_randomsearch_bestparams , gradientboosting_randomsearch_bestscore
+    gradientboosting_bestparams = g_random_search.best_params_
+    gradientboosting_bestscore =  g_random_search.best_score_
+    return gradientboosting_bestparams , gradientboosting_bestscore
 
 def random_forest(X_train, y_train):
     '''finds the best parameters for Random Forest classifier using randomed search cv'''
@@ -88,12 +90,11 @@ def random_forest(X_train, y_train):
               'min_samples_leaf': min_samples_leaf,
               'criterion': criterion}
     # hyperparameter tuning parameter search methodology
-    desired_iterations = 100
     random_search = RandomizedSearchCV(classifier, 
                                    param_grid, 
                                    scoring='recall',
                                    cv=3,
-                                   n_iter=desired_iterations,
+                                   n_iter=200,
                                    verbose=1,
                                    return_train_score=True,
                                    n_jobs=-1)
@@ -101,20 +102,7 @@ def random_forest(X_train, y_train):
     # print the bestparameters and the best recall score
     randomforest_randomsearch_bestparams = random_search.best_params_
     randomforest_randomsearch_bestscore =  random_search.best_score_
-    return randomforest_randomsearch_bestparams , randomforest_randomsearch_bestscore 
-
-def scaledata(df, num_col):
-    '''scales the number columns in the dataframe so that they have mean of 0 s
-    num_col= list of column names to be scaled'''
-    scaler= StandardScaler()
-    toscale= df[num_col].values
-    df.drop([num_col], axis=1, inplace= True)
-    scaler1= scaler.fit(toscale)
-    scaler2= scaler1.transform(toscale)
-    scalerdata=pd.DataFrame(scaler2, columns=num_col)
-    scalerdata.head()
-    df= pd.concat([df, scalerdata], axis=1)
-    return df
+    return randomforest_randomsearch_bestparams, randomforest_randomsearch_bestscore 
 
 
 def logistic_regression(X_train, y_train, solver=['liblinear']):
@@ -149,14 +137,14 @@ def logistic_regression(X_train, y_train, solver=['liblinear']):
     logistic_randomsearch_bestscore =  log_search.best_score_
     return logistic_randomsearch_bestparams, logistic_randomsearch_bestscore
 
+
 def finalmodel(X_train, y_train, X_holdout, y_holdout,Classifier, **kwargs):
     ''' given classifier and the best parameters (**kwargs) for that classifier, it returns the
     predict, score, precision, and recall'''
-    final_model= Classifier(kwargs)
+    final_model= Classifier(**kwargs)
     final_model.fit(X_train, y_train)
     y_predict= final_model.predict(X_holdout)
     score=final_model.score(X_holdout, y_holdout)
-    predict=final_model.predict(X_holdout)
     precision=precision_score(y_holdout, y_predict)
     recall=recall_score(y_holdout, y_predict)
     confusion_matrix=confusion_matrix(y_holdout, y_predict)
@@ -175,7 +163,5 @@ if __name__ == "__main__":
     randomforest_randomsearch_bestparams , randomforest_randomsearch_bestscore = random_forest(X_train, y_train)
     randomforest_finalmodel= finalmodel(X_train, y_train, X_holdout, y_holdout,RandomForestClassifier,randomforest_randomsearch_bestparams)
     # scale data then run randomsearchcv for logistic regression and use the result bestparameters to create the scores for the final model
-    cvd= scaledata(cvd, ['age', 'ap_hi', 'ap_lo', 'BMI'])
-    X_trainn, X_test, y_trainn, y_test= split_train_holdout(cvd, 'cardio')
     logistic_randomsearch_bestparams, logistic_randomsearch_bestscore= logistic_regression(X_trainn, y_trainn)
     logisticregression_finalmodel=finalmodel(X_trainn, y_trainn, X_test, y_test,LogisticRegression, logistic_randomsearch_bestparams)

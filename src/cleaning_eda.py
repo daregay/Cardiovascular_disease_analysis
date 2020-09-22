@@ -33,8 +33,7 @@ def percent_barplot (df, col, xlabel, title, color= 'cmk'):
     plt.yticks(size= 15)
     plt.xlabel(xlabel, size= 18)
     plt.style.use('seaborn')
-    plt.show()
-    return plt.show()
+    return None
 
 
 def year_count_barplot(df, col, x, hue):
@@ -199,28 +198,28 @@ def count_barplot(df, col,title, xlabel):
     return None
 
 
-def create_dummies(df, column,add1, add2):
+def create_dummies(df, column):
     '''creates dummies variables using the column and adds them to the dataframe
      delets the original column'''
     dummy= pd.get_dummies(df[column], prefix= column)
-    df[ [ add1, add2] ] = dummy[ [add1, add2]]
+    df= df.join(dummy, lsuffix="_left")
     del df[column]
-    return df 
+    return df
 
 
 if __name__ == "__main__":
     # import dataframe 
-    unclean_df= pd.read_csv('data/cardio_train.csv')
+    unclean_df= pd.read_csv('data/cardio_train.csv', ';')
     # clean the dataframe
-    unclean_df=cleaning_df(unclean_df, 'ap_lo', 200, 0)
-    cvd=cleaning_df(unclean_df, 'ap_hi', 300, 0)
+    clean=cleaning_df(unclean_df, 'ap_lo', 200, 0)
+    cvd=cleaning_df(clean, 'ap_hi', 300, 0)
     # EDA
     # take percentage of how many people have cvd for each glucose classifications and make barplot
     gluc_df = get_percentage(cvd, 'gluc', 'cardio')
-    gluc_barplot= percent_barplot(gluc_df, 0, 'Glucose classification', 'Percent of People Who Have CVD for Each Glucose Classification')
+    percent_barplot(gluc_df, 0, 'Glucose classification', 'Percent of People Who Have CVD for Each Glucose Classification')
     # take percentage of how many people have cvd for each cholestrol classifications and make barplot
     chole_df= get_percentage(cvd, 'cholesterol', 'cardio')
-    cholestrol_barplot=percent_barplot(chole_df, 0, 'Cholesterol Classification', 'Percent of People Who Have CVD for Each Cholesterol Classification')
+    percent_barplot(chole_df, 0, 'Cholesterol Classification', 'Percent of People Who Have CVD for Each Cholesterol Classification')
     # barplot of count of cvd as age increases 
     year_count_barplot(cvd, 'years', 'years', 'CVD')
     # makes percentage of how many peopl in each age group have cvd/dont have cvd and plots barplot
@@ -238,6 +237,7 @@ if __name__ == "__main__":
     excercise= lifestyle_df(cvd, {'cardio': 'CVD'}, 'active', {0: 'Not Active', 1: "Active"})
     lifestyle_barplot(excercise, 'active', 'CVD', 'Excercise', "Excercise and Cardiovascular Disease (CVD)")
     # barplot of count of people for each  BMI group who have cvd/ don't have cvd 
+    cvd['BMI']= np.round(cvd.weight /((cvd.height/100)**2),1)
     bmi_barplot(cvd)
     # barplot of cvd and diastolic blood pressure and systolic blood pressure 
     count_barplot(cvd,'ap_lo', "Diastolic blood pressure and Number of People who have/ don't have CVD",'Diastolic blood pressure (mmHg)')
@@ -248,7 +248,8 @@ if __name__ == "__main__":
     del cvd['weight']
     del cvd ['id']
     del cvd['years']
-    cvd= create_dummies(cvd, 'cholesterol','cholestrol_2','cholestrol_3')
-    cvd= create_dummies(cvd, 'gluc','gluc_2', 'gluc_3')
-    cvd.to_csv('final_df.csv')
-    pass
+    cvd= create_dummies(cvd, 'cholesterol')
+    cvd= create_dummies(cvd, 'gluc')
+    # # cvd.to_csv('final_df.csv')
+    plt.show()
+    

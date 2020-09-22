@@ -35,10 +35,10 @@ class CvdModeler(object):
         """
         Plots feature importance (for random forest and gradient boost models)
         Args:
-            X: ndarray - 2D
-            col_names(list): column names of X
+                X: ndarray - 2D
+                col_names(list): column names of X
         Returns:
-            Feature importance plot
+                Feature importance plot
         """
         importances = self.model.feature_importances_
         indices = np.argsort(importances)[::-1]
@@ -51,21 +51,21 @@ class CvdModeler(object):
         plt.xlim([-1, X.shape[1]])
         plt.tight_layout()
 
-def load_split_data(select=0):
-    """ 
+    def load_split_data(select=0):
+        """ 
         Load data in
-    Args:
-        select(int): option to control whether selective features will be used 
-    Returns:
-        Train_test datasets for X and y, as well as a list for column names
-    """
-    df_cvd = pd.read_csv('data/final_df')
-    if select:
-        feature_choice = ['age', 'systolic', 'diastolic', 'BMI, 'cholestrol_1', 'cholestrol_2', 'cholestrol_3', 'gluc_1', 'gluc_2', 'gluc_3', 'cvd']
-        df_cvd = df_cvd[feature_choice]
+        Args:
+            select(int): option to control whether selective features will be used 
+        Returns:
+            Train_test datasets for X and y, as well as a list for column names
+        """
+        df_cvd = pd.read_csv('data/final_df')
+        if select:
+            feature_choice = ['age', 'systolic', 'diastolic', 'BMI, "cholestrol_1", "cholestrol_2", "cholestrol_3", "gluc_1", "gluc_2", "gluc_3", "cvd"]
+            df_cvd = df_cvd[feature_choice]
 
-    y = df_cvd.pop('cvd').values
-    X = df_cvd.values
-    col_names = df_cvd.columns
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=1, stratify=y)
-    return (X_train, X_test, y_train, y_test), col_names
+        y = df_cvd.pop('cvd').values
+        X = df_cvd.values
+        col_names = df_cvd.columns
+        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=1, stratify=y)
+        return (X_train, X_test, y_train, y_test), col_names
