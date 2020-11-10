@@ -140,12 +140,12 @@ Based on the plot, a k value of 27, which has the least error rate was chosen fo
 
 ## The resulting model metrics are:
 
- Metrics| Accuracy | Precision | Recall 
- ------------- | ------------- | ------------- |  ------------- |  ------------- 
- RandomForestClassifier | 0.730  | 0.710 | 0.831 
- GradientBoostingClassifier | 0.690 | 0.680 | 0.79 
- LogisticRegression | 0.711 | 0.701 | 0.823 
- KNeighborsClassifier | 0.711 | 0.701 | 0.800 
+Metrics| Accuracy | Precision | Recall |
+------------- | ------------- | ------------- |  ------------- |  ------------- |
+RandomForestClassifier | 0.730  | 0.710 | 0.831 |
+GradientBoostingClassifier | 0.690 | 0.680 | 0.79 |
+LogisticRegression | 0.711 | 0.701 | 0.823 |
+KNeighborsClassifier | 0.711 | 0.701 | 0.800 |
 
 For this study, recall is the metric that we care most about. We want to penalize false negatives. That is we want to minimize the model predicting negative when the person has CVD. We are dealing with a problem of a disease impacting a human health, so we want to lower the risk of predicting a CVD case as Non CVD (False Negative) because it will be jeopardizing a person's life. 
 
