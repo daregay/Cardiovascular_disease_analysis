@@ -16,8 +16,7 @@ Cardiovascular diseases (CVDs) can refer to a number of heart conditions that in
 *   Congenital heart disease- An abnormality in the heart that develops before birth.
  
  
- 
-According to the World Health Organization, "Cardiovascular diseases (CVDs) are the number 1 cause of death globally, taking an estimated 17.9 million lives each year."  More people die annually from CVDs than from any other other causes, representing 31% of all global deaths.
+According to the World Health Organization, "Cardiovascular diseases (CVDs) are the number 1 cause of death globally, taking an estimated 17.9 million lives each year."  More people die annually from CVDs than from any other other causes, representing 31% of all global deaths (WHO).
  
 ## Goal
 The goal of this study is to find a model that predicts the presence or absence of cardiovascular disease (CVD) using the patient's examination results. I would also like to research what factors are primary in predicting if a person has a CVD.
@@ -117,12 +116,11 @@ Again, the vast majority of people in the dataset reported that they do not drin
 ![excerisize](images/exercise.png)
  
 The majority of people reported that they exercise. Among the people who reported that they are active the presence of CVD is slightly lower by a very small amount. The number of people who have CVD is slightly higher among people who are not active.
- 
-## The Process
 
-below is the process taken to compute my results. 
 
-### **Data Transformation steps** 
+## **Data Transformation steps** 
+
+below is the process taken to compute my results.
  
 - For Glucose level and Cholesterol level, additional feature engineering is performed to encode the categorical values. 
 - The values of 1 and 2 for the Gender column in reference to women and men, respectivily, was also changed to 0 and 1 so that it doesn't create weight problem during modeling. 
@@ -138,70 +136,80 @@ For KNN an elbow plot was preformed to see the most optimized number of k neighb
 
 ![knn](images/knn_elbow.png)
 
-Based on the plot a k value of 27, which has the least error rate, was chosen for the number of neighbors. 
-
-For this study, recall is the metric that we care most about. We want to penalize false negatives. That is we want to minimize the model predicting negative when the person has CVD. We are dealing with a problem of a disease impacting a human health, so we want to lower the risk of predicting a CVD case as Non CVD (False Negative) because it will be jeopardizing a person's life. 
-
-The second important metric is precision. While we don't want our model to predict negative for a person who has CVD. We also want to minimize our model predicting positive for a person who doesn't have CVD.  A high number of false positive can be costly for hospitals, and the patients because of all the false medial examinations. 
-
-![recallprecision](images/precision_recal.png)
-To properly choose the optimal treshold for each model, a precision and recall curve was also computed to see the tradoff score for the two metrics. 
-
-Based on the plot a treshhold of .3 was chosen. 
+Based on the plot, a k value of 27, which has the least error rate was chosen for the number of neighbors. 
 
 ## The resulting model metrics are:
 
 | metrics|RandomForestClassifier | GradientBoostingClassifier | LogisticRegression| KNeighborsClassifier| 
 | ------------- | ------------- | ------------- |  ------------- |  ------------- |
-| Accuracy | 0.710 | 0.690 | 0.711 | .706
+| Accuracy | 0.710 | 0.690  .706| 0.711 |
 | Precision | 0.710 | 0.680 | 0.701 | .701
 | Recall | 0.831 | 0.79 | 0.823 | .800
 
+| Metrics| Accuracy | Precision | Recall 
+| ------------- | ------------- | ------------- |  ------------- |  ------------- |
+|RandomForestClassifier | 0.730  | 0.710 | 0.831 |
+| GradientBoostingClassifier | 0.690 | 0.680 | 0.79 |
+| LogisticRegression | 0.711 | 0.701 | 0.823 | 
+| KNeighborsClassifier | 0.711 | 0.701 | 0.800 | 
 
-Random Forest gives the best score on all the metrics.However, the four models seem on par with each other for the most part. Because they all have similar scores I will try stacking them together to see if I can get a higher score. 
+For this study, recall is the metric that we care most about. We want to penalize false negatives. That is we want to minimize the model predicting negative when the person has CVD. We are dealing with a problem of a disease impacting a human health, so we want to lower the risk of predicting a CVD case as Non CVD (False Negative) because it will be jeopardizing a person's life. 
+
+The second important metric is precision. While we don't want our model to predict negative for a person who has CVD. We also want to minimize our model predicting positive for a person who doesn't have CVD.  A high number of false positive can be costly for hospitals, and the patients because of all the false medial examinations. 
+
+To properly choose the optimal treshold for each model, a precision and recall curve was also computed to see the tradoff score for the two metrics. Based on the plot a treshhold of .3 was chosen. 
+
+![4models](images/4model.png)
+
+Random Forest gives the best score on all the metrics. However, the four models seem on par with each other for the most part. Next I will try stacking them together to see if the four models can learn from each other to generate a highet score. 
 
 Model stacking is an efficient ensemble method in which the predictions, generated by using various machine learning algorithms, are used as inputs in a second-layer learning algorithm. This second-layer algorithm is trained to optimally combine the model predictions to form a new set of predictions.
 
+![stackedgraph](images/stacked.png)
+
 In this case since RandomForest gave the highest result, I will take the predicted weighted average of the first three models- LogisticRegression, GradientBoosting, and KNN , and use that as input for Random Forest. 
 
-![recallprecision](images/precision_recal.png)
+![recallstacked](images/recallstacked_model.png)
 
-The stacked model gave a higher score. The 4 models recall score is depicted in the plot below. 
+The stacked model gave a higher recall score. The 4 models recall score is depicted in the plot above. 
 
 **Given the results above, ROC curve was plotted to compare the area under the curve** 
 
-![roc curve](images/roc_auc.png)
+![roc curve](images/all_roc.png)
 
-ROC curve shows the trade-off between the true positive rate and the false positive rate for each level of threshold. The bigger the total area under the ROC curve, the better the model preformance. The plot above shows the ROC curve for all the competing models. The goal is to see if the stacked model is better than the 4 models individually. The stacked model has the biggest area under the curve and shows that it preforms best, while RandomForest is a close second. 
-
-
+Receiver operating characterstic curve shows the trade-off between the true positive rate and the false positive rate for each level of threshold. The bigger the total area under the ROC curve, the better the model preformance. The plot above shows the ROC curve for all the competing models. The goal is to see if the stacked model is better than the 4 models individually. The stacked model has the biggest area under the curve and shows that it preforms best, while RandomForest is a close second. 
 
 
-## Analysis of the Models 
-![rffeatureimportance](images/rf_confusion.png)
+## Evaluation of the Model results  
+![rffeatureimportance](images/evaluationmetric.png)
 
-14,000 rows were used for testing my model.  The model correctly predicted 37.33% (6411 people) as not having a CVD, and 34.47% (5920 people) as having a CVD.  13.13% (2255 people) were incorrectly predicted as having a CVD, and 15.08% (2590 people) were incorrectly predicted as not having CVD. 
+14,000 rows were used for testing my model.  Of the people who have CVD the Stacked Classifier was was able to correctly capture 92% of them. The model incorrecly classified 8% of them as not having CVD. Similarly, the model accuratly captured 76% of the people who don't have CVD and incorrecly classified the rest as having CVD. Because recall measures the ability of the model to 
+find all people with CVD, the model tried to minimize all the false negatives. 
 
+## Further understanding of Features 
 
 **Feature Importance**
 
-![rffeatureimportance](images/2random_forest_feature_ranking.png)
-
-The 5 most important features for Random Forest are age, systolic blood pressure, diastolic blood pressure, BMI, and well above normal cholestrol level. About 36.6% of information gain is done by age, followed by systolic blood pressure information gain of 31.2%,  13% by diastolic blood pressure, 11% for BMI, and about 1% for the rest of the listed features. 
+![rffeatureimportance](images/random_forest_feature_ranking_age3.png)
+Feature importance shows the variables that were the most useful at predicting if a patient has cardiovascular disease. 
+The top 10 most important features for Random Forest are age, systolic blood pressure, BMI,diastolic blood pressure,and well above normal cholestrol level. About 38.6% of information gain is done by age, followed by information gain of 22% for Systolic blood pressure,  16% by BMI, .09% for diastolic blood pressure, and less than .02% for Cholestrol level 3. 
 
 - The top 10 features contain 99% of the information gain that was done by the model. 
+
+- The error bars demonstrate the range of information that was done by each tree for that variable. 
+
+What's important to note here is that none of the self reported features such as smoking, drinking, exercise contributed to the 99% of information gain that was done by the model. As reported during the exploratory data analysis most people reported that they don't smoke, drink and that they are active. According to a study that was published in JAMA Network Open, "Up to 81% of patients lie to their doctors about how often they exercise, how much they eat, and other behaviors to avoid being judged." Since Chronic disease such as CVDs are stongly effected by behaviors (NIH), I think the model results could have improved with more accurate patient data. 
+
+### Random Forest Partial Dependency 
+
+![gradientboosting](images/dpi_withlabel.png)
+
+The partial dependence plots show how each predictor affects the model's predictions. The Y-axis is measured on the log-odds scale. Meaning, a negative y value makes the positive class less likely. In other words, when it's a negative y value there is high change that the model will predict that a patient doesn't have CVD specially as it nears -1, while the opposite is true when it's a postive value.  For this plot, you can see how the chance of CVD increase as age (shown in days) increases. After systolic blood pressure of 125 mmHg the chance of CVD increases exponentially. While the effect of BMI on the model is pretty slim, it shows a steady increasing trend of a positive class after about BMI of 27. 
+
 
 ## Decision Boundries: 
 
 ![decisonboundry](images/)
-
-
-### Random Forest Partial Dependency
-
-![gradientboosting](images/db.png)
-
-The partial dependence plots show how each predictor affects the model's predictions. You can see how the chance of CVD increase as age increases. After systolic blood pressure of 125 mmHg the chance of CVD increases exponentially. The effects of diastolic pressure on the model is pretty slim and seems to hold steady after about 90 mmHg. BMI also has a very small effect. 
-
 
 ### conclusion 
 
@@ -209,11 +217,13 @@ The goal of this study was to find the best model. I compared several models usi
 
 
 ### further work 
-In par with the explatory data analysis that was done initially, gender, smoking, alcohol, and excercise gave a very low signal for our model to train on. More than 99% of the information was gained by the other features. So further work I would like to: 
+In par with the explatory data analysis that was done initially, gender, smoking, alcohol, and excercise gave a very low signal for our model to train on.  So for further work I would like to: 
 
 * Use the top fewer variables to run the models again and see if we can compute better results. 
 * Perform PCA to see if we get better results
 * Try deep learning neural networks. 
+
+![pca](images/pca-components.png)
 
 
 ### Sources
@@ -224,13 +234,9 @@ maximal%20lifting%20with%20slow%20exhalation.
 
 * https://www.webmd.com/heart-disease/ldl-cholesterol-the-bad-cholesterol#1
 
-*https://www.webmd.com/heart-disease/ss/slideshow-heart-disease-surprising-causes
+* https://www.webmd.com/heart-disease/ss/slideshow-heart-disease-surprising-causes
 
-With the initial data EDA, I made the choice to select the following variables that show strong relationship to CVD to create my models:
- 
-- Age
-- BMI
-- Cholesterol level
-- Glucose level
-- Systolic blood pressure
-- Diastolic blood pressure
+* https://www.advisory.com/daily-briefing/2018/12/10/lying-patients#:~:text=Up%20to%2081%25%20of%20patients%20lie%20to%20their%20doctors%20about,can%20negatively%20affect%20patients'%20health.
+
+* https://pubmed.ncbi.nlm.nih.gov/22997327/
+
