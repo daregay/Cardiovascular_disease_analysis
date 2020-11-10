@@ -140,13 +140,7 @@ Based on the plot, a k value of 27, which has the least error rate was chosen fo
 
 ## The resulting model metrics are:
 
-| metrics|RandomForestClassifier | GradientBoostingClassifier | LogisticRegression| KNeighborsClassifier| 
-| ------------- | ------------- | ------------- |  ------------- |  ------------- |
-| Accuracy | 0.710 | 0.690  .706| 0.711 |
-| Precision | 0.710 | 0.680 | 0.701 | .701
-| Recall | 0.831 | 0.79 | 0.823 | .800
-
-| Metrics| Accuracy | Precision | Recall 
+| Metrics| Accuracy | Precision | Recall |
 | ------------- | ------------- | ------------- |  ------------- |  ------------- |
 |RandomForestClassifier | 0.730  | 0.710 | 0.831 |
 | GradientBoostingClassifier | 0.690 | 0.680 | 0.79 |
